@@ -20,7 +20,6 @@ module DatFile
       @games = Array.new
       @groups = Array.new
 
-      # http://stackoverflow.com/questions/1415254/reading-previous-line-of-file-with-ruby
       while (line = gets)
         # found the start of a game declaration
         if line =~ /^game(\s*)?\(/ then
