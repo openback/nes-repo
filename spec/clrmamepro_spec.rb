@@ -1,15 +1,15 @@
-require './lib/dat.rb'
+require './lib/datfile/clrmamepro.rb'
 
-RSpec.describe 'DatFile' do
+RSpec.describe 'DatFile::Clrmamepro' do
 	context 'With an invalid clrmamepro dat' do
 		it 'should throw IOError exception' do
-			expect{ dat = DatFile.new('util/ROMs/Mega Man.nes') }.to raise_exception(IOError)
+			expect{ dat = DatFile::Clrmamepro.new('util/ROMs/Mega Man.nes') }.to raise_exception(IOError)
 		end
 	end
 
 	context 'With a valid clrmamepro dat' do
 		before(:all) do
-			@dat = DatFile.new('util/NES.dat')
+			@dat = DatFile::Clrmamepro.new('util/NES.dat')
 		end
 
 		after(:all) do

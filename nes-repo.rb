@@ -1,6 +1,6 @@
 require 'fileutils'
 require_relative 'lib/nes'
-require_relative 'lib/dat'
+require_relative 'lib/datfile'
 
 dat = DatFile.new('util/NES.dat')
 output_path = "#{Dir.getwd}/debs"
