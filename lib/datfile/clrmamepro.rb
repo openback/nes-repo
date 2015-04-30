@@ -8,10 +8,8 @@ module DatFile
     def initialize(filename)
       super(filename)
 
-      first_line = gets
-
       begin
-        raise IOError if first_line !~ /clrmamepro(\s*)?\(/
+        raise IOError if gets !~ /clrmamepro(\s*)?\(/
       rescue ArgumentError, IOError
         # Invalid UTF-8 got thrown for binary files or we simply threw it ourselves
         raise IOError, 'Invalid Dat file'
@@ -36,7 +34,7 @@ module DatFile
     end
 
     def read_game_lines
-      lines = []
+      lines = Array.new
 
       3.times do
         lines.push gets.strip
@@ -75,6 +73,7 @@ module DatFile
 
       return nil if index.nil?
       game = @games[index]
+      # Make it easier to get to the group it's in
       game.group = group game.group_name
       game
     end

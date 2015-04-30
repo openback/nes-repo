@@ -1,2 +1,2 @@
-require 'datfile/game'
-require 'datfile/clrmamepro'
+require_relative 'datfile/game'
+require_relative 'datfile/clrmamepro'
