@@ -19,20 +19,25 @@ class NES
       :publisher    => nil,
       :developer    => nil,
     }
-    @rom = ROM.new
-    filename = filename
-    @title = File.basename(filename, ".*" )
 
-    file = File.open(filename)
-    @rom.read file
-    nes_file = File.read(file)
-    file.close
+    @rom = ROM.new
+    @title = File.basename(filename, ".*" )
+    # Will hold the actual ROM data
+    nes_file  = nil
+
+    File.open(filename) { |file|
+      @rom.read file
+      nes_file = File.read(file)
+    }
 
     # calculate the checksum after chopping off the header
     nes_file = nes_file[16..(nes_file.length - 1)]
     @crc = Zlib.crc32(nes_file).to_s(16).upcase
 
     raise TypeError.new("Invalid file") if @rom.type != "NES\x1A"
+
+    # Kick off the data call to get the data info
+    get_game_data
   end
 
   def nes2_header?
@@ -270,7 +275,6 @@ class NES
     if not @game_data_retrieved # We don't want to keep attempting to get nonexistant properties
       @game_data_retrieved = true
       game_id = nil
-      # TODO: Error Handling for open
       gameslist = get_gameslist
 
       gameslist.css('Game').each do |game|

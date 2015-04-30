@@ -8,10 +8,15 @@ class NesRepo
     dat = DatFile::Clrmamepro.new($dat_path)
 
     Dir.glob("#{$roms_path}/*.nes") do |file|
-      rom = NES.new(file)
-
       puts '=' * 80
       puts "#{file}"
+
+      begin
+        rom = NES.new(file)
+      rescue TypeError, SocketError => e
+        puts "ERROR: #{e}\n"
+        continue
+      end
 
       game_dat = dat.find_by_crc rom.crc
 
