@@ -71,7 +71,7 @@ RSpec.describe 'GamesDB' do
       expect(game[:overview].length).to be(833)
       expect(game[:publisher]).to eq("Capcom")
       expect(game[:developer]).to eq("Capcom")
-      expect(game[:coop]).to eq(false)
+      expect(game[:co_op]).to eq(false)
       expect(game[:players]).to eq(1)
     end
   end

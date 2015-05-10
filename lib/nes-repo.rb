@@ -35,12 +35,12 @@ class NesRepo
       package.description = "#{rom.title} [NES]"
       package.description += "\n NES ROM for use with an emulator"
       # TODO: Why is it pausing between these two lines each loop?
-      package.description += "\n Release Date: #{gamesdb_data.release_date.iso8601}" if !gamesdb_data.release_date.nil?
+      package.description += "\n Release Date: #{gamesdb_data[:ReleaseDate].iso8601}" if !gamesdb_data[:ReleaseDate].nil?
       package.description += "\n Mapper: #{rom.mapper}" if !rom.mapper.nil? and !rom.mapper.empty?
-      package.description += "\n Publisher: #{gamesdb_data.publisher}" if !gamesdb_data.publisher.nil? and !gamesdb_data.publisher.empty?
-      package.description += "\n Developer: #{gamesdb_data.developer}" if !gamesdb_data.developer.nil? and !gamesdb_data.developer.empty?
-      package.description += "\n Co-op: " + (gamesdb_data.coop? ? "Yes" : "No")
-      package.description += "\n Overview: #{gamesdb_data.overview}" if !gamesdb_data.overview.nil? and !gamesdb_data.overview.empty?
+      package.description += "\n Publisher: #{gamesdb_data[:Publisher]}" if !gamesdb_data[:Publisher].nil? and !gamesdb_data[:Publisher].empty?
+      package.description += "\n Developer: #{gamesdb_data[:Developer]}" if !gamesdb_data[:Developer].nil? and !gamesdb_data[:Developer].empty?
+      package.description += "\n Co-op: " + (gamesdb_data[:Coop] ? "Yes" : "No")
+      package.description += "\n Overview: #{gamesdb_data[:Overview]}" if !gamesdb_data[:Overview].nil? and !gamesdb_data[:Overview].empty?
       package.create
     end
   end

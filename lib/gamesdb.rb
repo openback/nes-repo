@@ -1,5 +1,9 @@
 require 'cgi'
 require 'open-uri'
+require 'facets/hash/traverse'
+require 'facets/string/snakecase'
+require_relative 'hash.rb'
+require_relative 'string.rb'
 
 # TODO: Cache the API calls
 class GamesDB
@@ -20,20 +24,20 @@ class GamesDB
     end
 
     raise NotFoundError.new(title) if game_id.nil?
-    game = self.get_game game_id
+    game = Hash.from_libxml(self.get_game(game_id).css('Data>Game').first.to_s)['Game']
 
-    iso_date = getXMLContent(game, 'Game ReleaseDate').sub(self::DATE_REGEX){|m| "#$3-#$1-#$2"}
+    # Let's clean up the element names and format some values
+    game.traverse do |key, val|
+      if key.match(/Date/)
+        val = Date.parse(val.sub(self::DATE_REGEX){|m| "#$3-#$1-#$2"})
+      elsif val == 'Yes' or val == 'No'
+        val = val == 'Yes'
+      elsif val.is_a? String and val.numeric?
+        val = val.to_i
+      end
 
-    # TODO: Run through and automatically grab everything
-    {
-      :id           => game_id,
-      :release_date => Date.parse(iso_date),
-      :overview     => getXMLContent(game, 'Game Overview'),
-      :players      => getXMLContent(game, 'Game Players').to_i,
-      :coop         => getXMLContent(game, 'Game Co-op') == 'Yes',
-      :publisher    => getXMLContent(game, 'Game Publisher'),
-      :developer    => getXMLContent(game, 'Game Developer'),
-    }
+      [key.to_s.snakecase.to_sym, val]
+    end
   end
 
   def self.platforms
