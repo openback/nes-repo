@@ -26,6 +26,7 @@ class NesRepo
       end
 
       puts "Found ROM: #{game_dat.description}"
+      gamesdb_data = GamesDB::find(:nintendo_entertainment_system_nes, rom.title)
 
       package = Package.new
       package.rom_path = file
@@ -35,12 +36,12 @@ class NesRepo
       package.description = "#{rom.title} [NES]"
       package.description += "\n NES ROM for use with an emulator"
       # TODO: Why is it pausing between these two lines each loop?
-      package.description += "\n Release Date: #{rom.release_date.iso8601}" if !rom.release_date.nil?
+      package.description += "\n Release Date: #{gamesdb_data.release_date.iso8601}" if !gamesdb_data.release_date.nil?
       package.description += "\n Mapper: #{rom.mapper}" if !rom.mapper.nil? and !rom.mapper.empty?
-      package.description += "\n Publisher: #{rom.publisher}" if !rom.publisher.nil? and !rom.publisher.empty?
-      package.description += "\n Developer: #{rom.developer}" if !rom.developer.nil? and !rom.developer.empty?
-      package.description += "\n Co-op: " + (rom.coop? ? "Yes" : "No")
-      package.description += "\n Overview: #{rom.overview}" if !rom.overview.nil? and !rom.overview.empty?
+      package.description += "\n Publisher: #{gamesdb_data.publisher}" if !gamesdb_data.publisher.nil? and !gamesdb_data.publisher.empty?
+      package.description += "\n Developer: #{gamesdb_data.developer}" if !gamesdb_data.developer.nil? and !gamesdb_data.developer.empty?
+      package.description += "\n Co-op: " + (gamesdb_data.coop? ? "Yes" : "No")
+      package.description += "\n Overview: #{gamesdb_data.overview}" if !gamesdb_data.overview.nil? and !gamesdb_data.overview.empty?
       package.create
     end
   end

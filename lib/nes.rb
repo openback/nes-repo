@@ -9,17 +9,6 @@ class NES
   attr_accessor :crc
 
   def initialize(filename)
-    @game_data_retrieved = false
-    # Filled out so we can use the keys in method_missing
-    @game_data = {
-      :release_date => nil,
-      :overview     => nil,
-      :players      => nil,
-      :coop         => nil,
-      :publisher    => nil,
-      :developer    => nil,
-    }
-
     @rom = ROM.new
     @title = File.basename(filename, ".*" )
     # Will hold the actual ROM data
@@ -35,9 +24,6 @@ class NES
     @crc = Zlib.crc32(nes_file).to_s(16).upcase
 
     raise TypeError.new("Invalid file") if @rom.type != "NES\x1A"
-
-    # Kick off the data call to get the data info
-    get_game_data
   end
 
   def nes2_header?
@@ -271,72 +257,7 @@ class NES
     253 => "DRAGON BALL PIRATE",
   }
 
-  def get_game_data(prop = nil)
-    if not @game_data_retrieved # We don't want to keep attempting to get nonexistant properties
-      @game_data_retrieved = true
-      game_id = nil
-      gameslist = get_gameslist
-
-      gameslist.css('Game').each do |game|
-        if game.search('GameTitle').first.content == title
-          game_id = game.search('id').first.content
-          break
-        end
-      end
-
-      if not game_id.nil?
-        game = get_game(game_id)
-
-        date_regex = %r_(?<!\d)(\d{1,2})/(\d{1,2})/(\d{4}|\d{2})(?!\d)_
-        iso_date = getXMLContent(game, 'Game ReleaseDate').sub(date_regex){|m| "#$3-#$1-#$2"}
-
-        @game_data = {
-          :release_date => Date.parse(iso_date),
-          :overview     => getXMLContent(game, 'Game Overview'),
-          :players      => getXMLContent(game, 'Game Players').to_i,
-          :coop         => getXMLContent(game, 'Game Co-op') == 'Yes',
-          :publisher    => getXMLContent(game, 'Game Publisher'),
-          :developer    => getXMLContent(game, 'Game Developer'),
-        }
-
-      end
-    end
-
-    return @game_data if prop.nil?
-    return @game_data[prop] if @game_data.key?(prop)
-    nil
-  end
-
-  def get_gameslist
-    query = {
-      :name => @title,
-      :platform => 'Nintendo Entertainment System (NES)'
-    }
-
-    Nokogiri::XML(open("http://thegamesdb.net/api/GetGamesList.php?" + hash_to_querystring(query)))
-  end
-
-  def get_game(game_id)
-    Nokogiri::XML(open("http://thegamesdb.net/api/GetGame.php?id=" + game_id))
-  end
-
-  def getXMLContent(doc, css)
-    node = doc.search(css).first
-
-    node.nil? ? '' : node.content
-  end
-
-  def hash_to_querystring(hash)
-    hash.keys.inject('') do |query_string, key|
-      query_string << '&' unless key == hash.keys.first
-      query_string << "#{URI.encode(key.to_s)}=#{URI.encode(hash[key])}"
-    end
-  end
-
   def method_missing(method, *args, &block)
-    # First check if we're  looking for game data
-    return get_game_data(method) if @game_data.key? method
-
     # Checking a flag?
     if method.slice(method.length - 1) == '?'
       flag_name = method.to_s.chop
