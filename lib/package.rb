@@ -23,7 +23,7 @@ class Package
     @version = 1
   end
 
-  def get_debian_control
+  def debian_control
     control = {
       :package      => @name,
       :version      => @version ,
@@ -34,16 +34,18 @@ class Package
       :description  => @description
     }
 
-    control.keys.reduce("") {|res, key| res += "#{key.to_s.capitalize}: #{control[key]}\n" }
+    control.keys.reduce("") do |res, key|
+      res += "#{key.to_s.capitalize}: #{control[key]}\n"
+    end
   end
 
-  def create
+  def write
     package_dir = "#{$tmp_path}/#{@name}"
 
     FileUtils.mkdir_p("#{package_dir}/usr/share/games/roms/nes")
     FileUtils.copy(@rom_path, "#{package_dir}/usr/share/games/roms/nes/#{@name}")
     FileUtils.mkdir_p("#{package_dir}/DEBIAN")
-    File.open("#{package_dir}/DEBIAN/control", 'w') { |f| f.write get_debian_control }
+    File.open("#{package_dir}/DEBIAN/control", 'w') { |f| f.write debian_control }
 
     puts `dpkg-deb -b "#{package_dir}" #{$package_path}`
     puts `reprepro -C main -Vb "#{$repo_path}" includedeb nes "#{$package_path}/#{@name}_1_all.deb"`

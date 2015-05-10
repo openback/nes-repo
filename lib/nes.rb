@@ -1,8 +1,5 @@
 require 'bindata'
-require 'nokogiri'
-require 'open-uri'
 require 'zlib'
-require 'pp'
 
 class NES
   attr_accessor :title
@@ -75,7 +72,6 @@ class NES
   end
 
   def mapper
-    # TODO: Default values for constant hashes?
     Mappers.has_key?(mapper_number) ? Mappers[mapper_number] : nil
   end
 
@@ -85,7 +81,7 @@ class NES
   #
   # FCE Ultra - NES/Famicom Emulator
   #
-  # Copyright notice for this file:
+  # Copyright notice for that file:
   #  Copyright (C) 1998 BERO
   #  Copyright (C) 2002 Xodnizel
   #

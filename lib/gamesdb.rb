@@ -1,4 +1,5 @@
 require 'cgi'
+require 'nokogiri'
 require 'open-uri'
 require 'facets/hash/traverse'
 require 'facets/string/snakecase'

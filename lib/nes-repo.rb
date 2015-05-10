@@ -41,7 +41,7 @@ class NesRepo
       package.description += "\n Developer: #{gamesdb_data[:Developer]}" if !gamesdb_data[:Developer].nil? and !gamesdb_data[:Developer].empty?
       package.description += "\n Co-op: " + (gamesdb_data[:Coop] ? "Yes" : "No")
       package.description += "\n Overview: #{gamesdb_data[:Overview]}" if !gamesdb_data[:Overview].nil? and !gamesdb_data[:Overview].empty?
-      package.create
+      package.write
     end
   end
 end
