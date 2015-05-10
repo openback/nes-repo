@@ -31,7 +31,6 @@ class NesRepo
       package = Package.new
       package.rom_path = file
       package.name = game_dat.description.downcase.gsub(/\s/,'-').gsub(/[^\w-]/, '').gsub(/\-+/, '-') + "-nes"
-      package.version = 1
       package.maintainer = $package_maintainer
       package.description = "#{rom.title} [NES]"
       package.description += "\n NES ROM for use with an emulator"

@@ -34,11 +34,20 @@ RSpec.describe 'NES' do
       expect(rom.prg_ram_size_in_kilobytes).to eq(0)
       expect(rom.prg_ram_size_in_bytes).to eq(0)
       expect(rom.tv_system).to eq(:ntsc)
+      expect(rom.ntsc?).to eq(true)
+      expect(rom.pal?).to eq(false)
     end
 
     it "raises with invalid flags" do
       rom = NES.new(valid_rom_path)
       expect{rom.invalid_flag?}.to raise_error(NameError)
+      # Not a Bit flag
+      expect{rom.mirroring?}.to raise_error(NameError)
+    end
+
+    it "still raises with invalid properties" do
+      rom = NES.new(valid_rom_path)
+      expect{rom.not_a_thing}.to raise_error(NameError)
     end
 
     it "calculates the checksum without the header" do

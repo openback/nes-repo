@@ -2,13 +2,13 @@ require 'fileutils'
 
 class Package
   attr_accessor :description
+  # Name of the intended file. Do not append things such as version numbers or
+  # architecture, as these will be done automatically as needed
   attr_accessor :name
   # The ROM filename
   attr_accessor :rom_path
   # Your email address
   attr_accessor :maintainer
-  # Name of the intended file. Do not append things such as version numbers or
-  # architecture, as these will be done automatically as needed
   attr_accessor :version
 
   # For debian. No good reasone to change these.
@@ -20,6 +20,7 @@ class Package
     @section = 'all'
     @architecture = 'all'
     @priority = 'optional'
+    @version = 1
   end
 
   def get_debian_control

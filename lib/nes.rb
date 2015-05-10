@@ -30,10 +30,6 @@ class NES
     @rom.nes2 == 2
   end
 
-  def coop?
-    @game_data[:coop]
-  end
-
   def prg_size_in_kilobytes
     @rom.prg_size_in_16kb_units * 16
   end
@@ -67,11 +63,11 @@ class NES
   end
 
   def ntsc?
-    @rom.tv_system == :ntsc
+    tv_system == :ntsc
   end
 
   def pal?
-    @rom.tv_system == :pal
+    tv_system == :pal
   end
 
   def mapper_number
