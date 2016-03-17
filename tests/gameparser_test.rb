@@ -11,7 +11,7 @@ clrmamepro (
 )
 EOH
 
-MEGAMANU = <<EOG
+MEGA_MAN_U = <<EOG
 game (
   name "Mega Man (USA)"
   description "Mega Man (USA)"
@@ -19,7 +19,7 @@ game (
 )
 EOG
 
-MEGAMAN2U = <<EOG
+MEGA_MAN_2_U = <<EOG
 game (
   name "Mega Man 2 (USA)"
   description "Mega Man 2 (USA)"
@@ -27,7 +27,7 @@ game (
 )
 EOG
 
-MEGAMAN2E = <<EOG
+MEGA_MAN_2_E = <<EOG
 game (
   name "Mega Man 2 (Europe)"
   description "Mega Man 2 (Europe)"
@@ -35,9 +35,9 @@ game (
 )
 EOG
 
-DAT = [EMPTYDAT, MEGAMANU, MEGAMAN2U, MEGAMAN2E].join " \n"
+DAT = [EMPTYDAT, MEGA_MAN_U, MEGA_MAN_2_U, MEGA_MAN_2_E].join " \n"
 
-MEGA_MAN_CONTROL = <<-EOG.strip
+MEGA_MAN_U_CONTROL = <<-EOG.strip
 Package: mega-man-usa-nes
 Version: 2
 Architecture: all
@@ -50,6 +50,8 @@ EOG
 class GameParserTest < Minitest::Test
   def setup
     @datIO = StringIO.new(DAT)
+    @games = GameParser.parse(@datIO, 'maintainer', 2)
+    @datIO.seek(0)
   end
 
   def test_raises_without_io
@@ -67,11 +69,18 @@ class GameParserTest < Minitest::Test
   end
 
   def test_outputs_debian_control
-    assert_equal(MEGA_MAN_CONTROL, GameParser.parse_game(MEGAMANU, 'maintainer', 2).to_debian_control)
+    assert_equal(MEGA_MAN_U_CONTROL, GameParser.parse_game(MEGA_MAN_U, 'maintainer', 2).to_debian_control)
   end
 
-  # def test_returns_game
-  #   games = GameParser.parse(@datio)
-  #   assert_equal(mega_man, games.find_by_md5('D76E9A94AEBBA887A6FCD1DA3375F48D').to_debian_control)
-  # end
+  def test_returns_game_by_md5
+    assert_equal(MEGA_MAN_U_CONTROL, @games.find_by_md5('4DE82CFCEADBF1A5E693B669B1221107').to_debian_control)
+  end
+
+  def test_returns_game_by_sha1
+    assert_equal(MEGA_MAN_U_CONTROL, @games.find_by_sha1('6047E52929DFE8ED4708D325766CCB8D3D583C7D').to_debian_control)
+  end
+
+  def test_returns_game_by_crc
+    assert_equal(MEGA_MAN_U_CONTROL, @games.find_by_crc('6EE4BB0A').to_debian_control)
+  end
 end

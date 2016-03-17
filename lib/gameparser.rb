@@ -26,11 +26,23 @@ class GameParser
   end
 
   def self.parse_game dat, maintainer, version=1
-    Game.new(
-      /\s+name\s+"(.*?)"$/m.match(dat).captures[0],
-      /\s+description\s+"(.*?)"$/m.match(dat).captures[0],
-      maintainer,
-      version
-    )
+    Game.new({
+      :name => self.get_quoted_val(dat, 'name'),
+      :description => self.get_quoted_val(dat, 'description'),
+      :maintainer => maintainer,
+      :md5 => self.get_val(dat, 'md5'),
+      :sha1 => self.get_val(dat, 'sha1'),
+      :crc => self.get_val(dat, 'crc'),
+      :version => version
+    })
+  end
+
+  private
+  def self.get_quoted_val dat, name
+    /\s+#{name}\s+"(.*?)"/m.match(dat).captures[0]
+  end
+
+  def self.get_val dat, name
+    /\s+#{name}\s+(\w*)/m.match(dat).captures[0]
   end
 end

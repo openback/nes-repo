@@ -1,6 +1,29 @@
 class Game
-  def initialize(name, description, maintainer, version=1)
-    @name, @description, @maintainer, @version = name, description, maintainer, version
+  def initialize data
+    data[:version] = data[:version] || 1
+    [
+      :crc,
+      :description,
+      :name,
+      :maintainer,
+      :md5,
+      :sha1,
+      :version,
+    ].each do |name|
+      instance_variable_set "@#{name}", data[name]
+    end
+  end
+
+  def sha1? sha1
+    @sha1 == sha1
+  end
+
+  def md5? md5
+    @md5 == md5
+  end
+
+  def crc? crc
+    @crc == crc
   end
 
   def to_debian_control
