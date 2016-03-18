@@ -13,15 +13,8 @@ class GameCollection
     @games.length
   end
 
-  def find_by_crc crc
-    @games.find { |game| game.crc? crc }
-  end
-
-  def find_by_md5 md5
-    @games.find { |game| game.md5? md5 }
-  end
-
-  def find_by_sha1 sha1
-    @games.find { |game| game.sha1? sha1 }
+  def find_by args
+    raise ArgumentError unless args.length == 1 && Game.method_defined?("#{args.keys.first}?")
+    @games.find { |game| game.send("#{args.keys.first}?", args.values.first) }
   end
 end

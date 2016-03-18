@@ -73,14 +73,14 @@ class GameParserTest < Minitest::Test
   end
 
   def test_returns_game_by_md5
-    assert_equal(MEGA_MAN_U_CONTROL, @games.find_by_md5('4DE82CFCEADBF1A5E693B669B1221107').to_debian_control)
+    assert_equal(MEGA_MAN_U_CONTROL, @games.find_by(md5: '4DE82CFCEADBF1A5E693B669B1221107').to_debian_control)
   end
 
   def test_returns_game_by_sha1
-    assert_equal(MEGA_MAN_U_CONTROL, @games.find_by_sha1('6047E52929DFE8ED4708D325766CCB8D3D583C7D').to_debian_control)
+    assert_equal(MEGA_MAN_U_CONTROL, @games.find_by(sha1: '6047E52929DFE8ED4708D325766CCB8D3D583C7D').to_debian_control)
   end
 
   def test_returns_game_by_crc
-    assert_equal(MEGA_MAN_U_CONTROL, @games.find_by_crc('6EE4BB0A').to_debian_control)
+    assert_equal(MEGA_MAN_U_CONTROL, @games.find_by(crc: '6EE4BB0A').to_debian_control)
   end
 end
