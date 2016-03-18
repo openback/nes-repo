@@ -11,16 +11,8 @@ class GameParser
 
     games = GameCollection.new
 
-    while line = stream.gets
-      next unless line =~ /^game(\s*)?\(/
-
-      game_lines = ''
-
-      until (line = stream.gets).nil? || line =~ /^\)$/
-        game_lines += line
-      end
-
-      games << self.parse_game(game_lines, maintainer, version)
+    stream.readlines.join.scan(/game\s+\((.*?)^\)$/m).flatten.each do |gamestr|
+      games << self.parse_game(gamestr, maintainer, version)
     end
 
     games
